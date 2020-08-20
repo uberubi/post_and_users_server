@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Form } from "semantic-ui-react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 
+import { AuthContext } from "../context/auth";
 import { useForm } from "../utils/hooks";
 
 const Register = (props) => {
+  const context = useContext(AuthContext);
   const [errors, setErrors] = useState({});
 
   const { onChange, onSubmit, values } = useForm(registerUser, {
@@ -16,8 +18,8 @@ const Register = (props) => {
   });
 
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
-    update(_, result) {
-      console.log(result);
+    update(_, { data: { register: userData } }) {
+      context.login(userData);
       props.history.push("/");
     },
     onError(err) {
@@ -27,7 +29,7 @@ const Register = (props) => {
   });
 
   function registerUser() {
-    addUser()
+    addUser();
   }
 
   return (
@@ -39,7 +41,7 @@ const Register = (props) => {
           placeholder="Username..."
           name="username"
           value={values.username}
-          error={errors.username && values.username !== ''? true : false}
+          error={errors.username && values.username !== "" ? true : false}
           onChange={onChange}
         ></Form.Input>
         <Form.Input
@@ -48,7 +50,7 @@ const Register = (props) => {
           placeholder="Email..."
           name="email"
           value={values.email}
-          error={errors.email && values.email !== ''? true : false}
+          error={errors.email && values.email !== "" ? true : false}
           onChange={onChange}
         ></Form.Input>
         <Form.Input
@@ -66,7 +68,11 @@ const Register = (props) => {
           placeholder="Confirm password..."
           name="confirmPassword"
           value={values.confirmPassword}
-          error={errors.confirmPassword && values.confirmPassword !== ''? true : false}
+          error={
+            errors.confirmPassword && values.confirmPassword !== ""
+              ? true
+              : false
+          }
           onChange={onChange}
         ></Form.Input>
         <Button type="submit" primary>
