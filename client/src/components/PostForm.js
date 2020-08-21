@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import { Form, Button } from "semantic-ui-react";
@@ -7,7 +7,7 @@ import { useForm } from "../utils/hooks";
 import { FETCH_POSTS_QUERY } from "../utils/graphql";
 
 const PostForm = () => {
-  const [errors, setErrors] = useState({})
+  // const [errors, setErrors] = useState({})
   const {values, onChange, onSubmit} = useForm(createPostCallback, {
     body: ''
   })
@@ -22,9 +22,9 @@ const PostForm = () => {
       });
       values.body = '';
     },
-    // refetchQueries: refetchPosts => [{query: FETCH_POSTS_QUERY}]
+    // // refetchQueries: refetchPosts => [{query: FETCH_POSTS_QUERY}]
     onError(error) {
-      setErrors(error.graphQLErrors[0].extensions.exception.errors);
+      // setErrors(error.graphQLErrors[0].extensions.exception.errors);
     }
   })
 
