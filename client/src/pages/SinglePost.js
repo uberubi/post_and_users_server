@@ -15,12 +15,13 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { AuthContext } from "../context/auth";
 import LikeButton from "../components/LikeButton";
 import DeleteButton from "../components/DeleteButton";
+import MyPopup from "../utils/MyPopup";
 dayjs.extend(relativeTime); // extend dayjs with relativeTime plugin for using .fromNow() method
 
 const SinglePost = (props) => {
   const postId = props.match.params.postId;
   const { user } = useContext(AuthContext);
-  const commentInputRef = useRef(null)
+  const commentInputRef = useRef(null);
   const [comment, setComment] = useState("");
 
   const { loading, error, data } = useQuery(FETCH_POST_QUERY, {
@@ -32,7 +33,7 @@ const SinglePost = (props) => {
   const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
     update() {
       setComment("");
-      commentInputRef.current.blur()
+      commentInputRef.current.blur();
     },
     variables: {
       postId,
@@ -81,18 +82,20 @@ const SinglePost = (props) => {
               <hr />
               <Card.Content extra>
                 <LikeButton user={user} post={{ id, likeCount, likes }} />
-                <Button
-                  as="div"
-                  labelPosition="right"
-                  onClick={() => console.log("Comment on post")}
-                >
-                  <Button basic color="blue">
-                    <Icon name="comments"></Icon>
+                <MyPopup content="Comment on post">
+                  <Button
+                    as="div"
+                    labelPosition="right"
+                    onClick={() => console.log("Comment on post")}
+                  >
+                    <Button basic color="blue">
+                      <Icon name="comments"></Icon>
+                    </Button>
+                    <Label basic color="blue" pointing="left">
+                      {commentCount}
+                    </Label>
                   </Button>
-                  <Label basic color="blue" pointing="left">
-                    {commentCount}
-                  </Label>
-                </Button>
+                </MyPopup>
                 {user && user.username === username && (
                   <DeleteButton postId={id} callback={deletePostCallback} />
                 )}
