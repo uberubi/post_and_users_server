@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
-import { Button, Confirm, Icon, Popup } from "semantic-ui-react";
+import { Button, Confirm, Icon } from "semantic-ui-react";
 import { FETCH_POSTS_QUERY } from "../utils/graphql";
+import { DELETE_POST_MUTATION } from "../utils/graphql";
+import { DELETE_COMMENT_MUTATION } from "../utils/graphql";
 
 import MyPopup from "../utils/MyPopup";
 
@@ -53,26 +54,5 @@ const DeleteButton = ({ postId, commentId, callback }) => {
     </>
   );
 };
-
-const DELETE_POST_MUTATION = gql`
-  mutation deletePost($postId: ID!) {
-    deletePost(postId: $postId)
-  }
-`;
-
-const DELETE_COMMENT_MUTATION = gql`
-  mutation deleteComment($postId: ID!, $commentId: ID!) {
-    deleteComment(postId: $postId, commentId: $commentId) {
-      id
-      comments {
-        id
-        username
-        createdAt
-        body
-      }
-      commentCount
-    }
-  }
-`;
 
 export default DeleteButton;
